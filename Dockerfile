@@ -1,4 +1,8 @@
 FROM python:3.6
+RUN echo 'deb http://deb.debian.org/debian jessie-backports main contrib non-free' >> /etc/apt/sources.list.d/backports.list
+RUN echo 'deb http://deb.debian.org/debian jessie-backports-sloppy main contrib non-free' >> /etc/apt/sources.list.d/backports.list
+RUN apt-get update && apt-get install -y ffmpeg
+
 
 VOLUME /input
 
