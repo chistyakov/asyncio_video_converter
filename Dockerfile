@@ -3,6 +3,8 @@ RUN echo 'deb http://deb.debian.org/debian jessie-backports main contrib non-fre
 RUN echo 'deb http://deb.debian.org/debian jessie-backports-sloppy main contrib non-free' >> /etc/apt/sources.list.d/backports.list
 RUN apt-get update && apt-get install -y ffmpeg
 
+ENV HOST=0.0.0.0
+ENV PORT=8080
 
 VOLUME /input
 
