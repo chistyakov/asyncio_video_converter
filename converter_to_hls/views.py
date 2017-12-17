@@ -6,7 +6,7 @@ from schemas import LaunchConverterSchema
 from services.transcoding import (
     LimitExceededException, DuplicatedTasksException, FailedToStartConvertation
 )
-from services.utils import build_state_link
+from services.utils import build_state_link, build_result_link
 
 
 async def status(request):
@@ -56,5 +56,6 @@ async def check_state(request):
         data={
             'task_id': task_id,
             'state': str(converter.state),
+            'result': build_result_link(converter.relative_output_path, request.app)
         }
     )

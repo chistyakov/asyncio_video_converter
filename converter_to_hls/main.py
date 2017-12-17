@@ -14,7 +14,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 def create_app(loop):
     app = web.Application(middlewares=[error_middleware, ])
-    setup_routes(app)
     app['config'] = MappingProxyType(
         {
             'host': os.environ.get('HOST', '0.0.0.0'),
@@ -22,8 +21,10 @@ def create_app(loop):
             'tasks_limit': int(os.environ.get('TASKS_LIMIT', 5)),
             'output_dir': os.environ.get('OUTPUT_DIR', '/output'),
             'input_dir': os.environ.get('INPUT_DIR', '/input'),
+            'cdn_base_uri': os.environ.get('CDN_BASE_URI', None)
         }
     )
+    setup_routes(app)
     # TODO: add bootstrapping of the ConvertManager from filesystem on app's initialization
     #       (add existing m3u8 files with the finalization string '#EXT-X-ENDLIST' to tasks registry)
     #       to come through application's restart

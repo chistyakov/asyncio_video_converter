@@ -12,12 +12,11 @@ async def test_run_converter_task_runs_ffmpeg_subprocess(loop):
          patch('os.path.exists', return_value=True)), (
          patch('os.makedirs', return_value=True)), (
          patch('services.transcoding.manager.ConvertTask.build_task_id', return_value='uuid')):
-        task = ConvertTask(filename='foo', loop=loop,
-                           config={
+        task = ConvertTask(filename='foo', config={
                                'input_dir': '/input',
                                'output_dir': '/output',
                                'tasks_limit': 2
-                           })
+                           }, loop=loop, executor=None)
         await task.run()
         mock_subprocess_exec.assert_called_once_with(
             'ffmpeg', '-i', '/input/foo', '-c:v', 'h264',

@@ -19,19 +19,20 @@ STOP_FFMPEG_TIMEOUT_IN_SEC = 5
 
 
 class ConvertTask(Task):
-    def __init__(self, filename, loop, config):
+    def __init__(self, filename, config, loop, executor):
         super().__init__()
         self.filename = filename
         self.config = config
         self._loop = loop
+        self._executor = executor
 
         self._ffmpeg_proc = None
 
     async def run(self):
-        if not await path_exists(self.input_path, loop=self._loop):
+        if not await path_exists(self.input_path, loop=self._loop, executor=self._executor):
             raise FileNotFoundError(f'The file {self.filename} does not exist')
 
-        if await makedirs(self._output_dir_path, loop=self._loop):
+        if await makedirs(self.output_path_dir, loop=self._loop, executor=self._executor):
             await self.start_ffmpeg()
         return self
 
@@ -63,10 +64,14 @@ class ConvertTask(Task):
 
     @property
     def output_path(self):
-        return os.path.join(self._output_dir_path, PLAYLIST_NAME)
+        return os.path.join(self.config['output_dir'], self.relative_output_path)
 
     @property
-    def _output_dir_path(self):
+    def relative_output_path(self):
+        return os.path.join(self.task_id, PLAYLIST_NAME)
+
+    @property
+    def output_path_dir(self):
         return os.path.join(self.config['output_dir'], self.task_id)
 
     async def stop(self, timeout=STOP_FFMPEG_TIMEOUT_IN_SEC):
@@ -98,4 +103,7 @@ class ConvertTask(Task):
 
     @property
     def result(self):
-        return None
+        if self.state == State.FAILED_TO_START:
+            return None
+        else:
+            return self.relative_output_path

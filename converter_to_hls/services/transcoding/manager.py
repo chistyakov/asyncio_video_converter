@@ -6,22 +6,15 @@ from .exceptions import LimitExceededException, DuplicatedTasksException
 
 
 class ConvertManager:
-    """
-    Manage convertion tasks.
-
-    Side-effect: ConverManager changes default executor for the loop
-    """
     def __init__(self, config, loop=None):
         self.config = config
         self.loop = loop or asyncio.get_event_loop()
-        self.loop.set_default_executor(
-            ThreadPoolExecutor(max_workers=self.config['tasks_limit'])
-        )
+        self.executor = ThreadPoolExecutor(max_workers=self.config['tasks_limit'])
         # TODO: replace with something like TasksRegistry
         self.tasks = {}
 
     async def convert(self, filename):
-        convert_task = ConvertTask(filename, self.loop, self.config)
+        convert_task = ConvertTask(filename, self.config, self.loop, self.executor)
         self[convert_task.task_id] = convert_task
         await convert_task.run()
         return convert_task
