@@ -32,7 +32,7 @@ class ConvertManager:
 
     @property
     def running_count(self):
-        return sum(1 for c in self.tasks.values() if c.state == State.RUNNING)
+        return sum(1 for c in self.tasks.values() if c.state == State.IN_PROGRESS)
 
     def __getitem__(self, task_id):
         return self.tasks[task_id]

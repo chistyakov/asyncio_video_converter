@@ -4,7 +4,7 @@ from enum import Enum, auto
 
 
 class State(Enum):
-    RUNNING = auto()
+    IN_PROGRESS = auto()
     FINISHED_SUCCESSFULLY = auto()
     FINISHED_WITH_ERROR = auto()
     FAILED_TO_START = auto()

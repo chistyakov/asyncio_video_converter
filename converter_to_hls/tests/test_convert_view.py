@@ -36,11 +36,11 @@ async def test_run_convert_creates_task(cli):
 
 async def test_converts_limit_exceeded(cli):
     cli.server.app['convert_manager'].tasks = {
-        'uuid1': Mock(task_id='uuid', state=State.RUNNING),
-        'uuid2': Mock(task_id='uuid', state=State.RUNNING),
-        'uuid3': Mock(task_id='uuid', state=State.RUNNING),
-        'uuid4': Mock(task_id='uuid', state=State.RUNNING),
-        'uuid5': Mock(task_id='uuid', state=State.RUNNING),
+        'uuid1': Mock(task_id='uuid', state=State.IN_PROGRESS),
+        'uuid2': Mock(task_id='uuid', state=State.IN_PROGRESS),
+        'uuid3': Mock(task_id='uuid', state=State.IN_PROGRESS),
+        'uuid4': Mock(task_id='uuid', state=State.IN_PROGRESS),
+        'uuid5': Mock(task_id='uuid', state=State.IN_PROGRESS),
     }
     with async_patch('services.transcoding.manager.ConvertTask.run'):
         resp = await cli.post('/convert', json={'file': 'foo.mp4'})

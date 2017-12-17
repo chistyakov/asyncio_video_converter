@@ -75,7 +75,7 @@ class ConvertTask(Task):
         return os.path.join(self.config['output_dir'], self.task_id)
 
     async def stop(self, timeout=STOP_FFMPEG_TIMEOUT_IN_SEC):
-        if self.state != State.RUNNING:
+        if self.state != State.IN_PROGRESS:
             logger.warning('ffmpeg for the task %s is not running', self.task_id)
             return
         try:
@@ -92,7 +92,7 @@ class ConvertTask(Task):
         if self._ffmpeg_proc is None:
             return State.FAILED_TO_START
         if self._ffmpeg_proc.returncode is None:
-            return State.RUNNING
+            return State.IN_PROGRESS
         if self._ffmpeg_proc.returncode == 0:
             return State.FINISHED_SUCCESSFULLY
         else:
