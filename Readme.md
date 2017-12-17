@@ -10,5 +10,7 @@
 ```shell
 docker build . -t converter2hls
 docker run -d -p 8080:8080 --name converter2hls -v ${PWD}/input:/input converter2hls
-Ctrl+C
+
+cp Helicopter_DivXHT_ASP.divx ./input/
+http --json POST http://localhost:8080/convert file=Helicopter_DivXHT_ASP.divx
 ```
