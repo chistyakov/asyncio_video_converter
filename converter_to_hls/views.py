@@ -48,14 +48,14 @@ async def start_convertation(request):
 async def check_state(request):
     task_id = request.match_info.get('task_id')
     try:
-        converter = request.app['convert_manager'][task_id]
+        task = request.app['convert_manager'][task_id]
     except KeyError as e:
         raise HTTPNotFound from e
     return web.json_response(
         status=200,
         data={
             'task_id': task_id,
-            'state': str(converter.state),
-            'result': build_result_link(converter.relative_output_path, request.app)
+            'state': str(task.state),
+            'result': build_result_link(task.result, request.app)
         }
     )

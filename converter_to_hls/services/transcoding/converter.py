@@ -54,13 +54,14 @@ class ConvertTask(Task):
                 loop=self._loop,
                 stdout=asyncio.subprocess.PIPE,
             )
-            return self._ffmpeg_proc
         except Exception as e:
             logger.exception(
                 'Exception on starting ffmpeg for %s (task_id: %s)',
                 self.filename, self.task_id
             )
+            self._ffmpeg_proc = None
             raise FailedToStartConvertation(task_id=self.task_id) from e
+        return self._ffmpeg_proc
 
     @property
     def output_path(self):
