@@ -1,9 +1,9 @@
+import asyncio
+import logging
+import os
 import socket
-import uuid
 
-
-def build_task_id():
-    return str(uuid.uuid4())
+logger = logging.getLogger(__name__)
 
 
 def build_state_link(task_id, app):
@@ -13,7 +13,7 @@ def build_state_link(task_id, app):
 
 
 def build_base_api_url(app):
-    return f'http://{app["host"]}:{app["port"]}'
+    return f'http://{app["config"]["host"]}:{app["config"]["port"]}'
 
 
 def get_server_name():
@@ -38,3 +38,18 @@ def slash_safe_join_url(*args):
     'https://cdn/username/servername/check_state/task_id'
     """
     return '/'.join(part.strip('/') for part in args)
+
+
+async def makedirs(name, mode=0o777, loop=None):
+    loop = loop or asyncio.get_event_loop()
+    try:
+        await loop.run_in_executor(None, os.makedirs, name, mode)
+        return True
+    except OSError:
+        logger.exception('Error on creating the dir %s', name)
+        return False
+
+
+async def path_exists(path, loop=None):
+    loop = loop or asyncio.get_event_loop()
+    return await loop.run_in_executor(None, os.path.exists, path)

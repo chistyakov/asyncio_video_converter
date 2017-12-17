@@ -5,6 +5,9 @@ RUN apt-get update && apt-get install -y ffmpeg
 
 ENV HOST=0.0.0.0
 ENV PORT=8080
+ENV TASKS_LIMIT=5
+ENV OUTPUT_DIR=/output
+ENV INPUT_DIR=/input
 
 VOLUME /input
 
